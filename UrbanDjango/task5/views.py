@@ -2,8 +2,6 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from task5.forms import UserRegister
 
-# Create your views here.
-
 users = ['Garik', 'Timyr', 'Pavel', 'Marina']
 
 
@@ -19,22 +17,19 @@ def sign_up_by_django(request):
             age = form.cleaned_data['age']
         if username not in users and password == repeat_password and int(age) >= 18:
             users.append(username)
-            print(users)
             return HttpResponse(f'Приветствуем {username}')
         elif username in users:
             i += 1
             info[f'error {i}'] = HttpResponse('Пользователь уже существует', status=400, reason='repeated login')
-            print(info[f'error {i}'])
             return HttpResponse('Пользователь уже существует', status=400, reason='repeated login')
         elif password != repeat_password:
             i += 1
             info[f'error {i}'] = HttpResponse('Пароли не совпадают', status=400, reason='The passwords do not match')
-            print(info[f'error {i}'])
             return HttpResponse('Пароли не совпадают', status=400, reason='The passwords do not match')
         elif int(age) < 18:
             i += 1
             info[f'error {i}'] = HttpResponse(
-                'Вы должны быть старше 18', status=400, reason='insufficient age')
+                'Вы должны быть старше 18 лет', status=400, reason='insufficient age')
             return HttpResponse('Вы должны быть старше 18', status=400, reason='insufficient age')
     else:
         form = UserRegister()
@@ -43,21 +38,16 @@ def sign_up_by_django(request):
 
 
 def sign_up_by_html(request):
-    i = 0
     info = {'error': []}
+    i = 0
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
         repeat_password = request.POST.get('repeat_password')
         age = request.POST.get('age')
 
-        print(f'Username: {username}')
-        print(f'Password: {password}')
-        print(f'Repeat password: {repeat_password}')
-        print(f'Age: {age}')
         if username not in users and password == repeat_password and int(age) >= 18:
             users.append(username)
-            print(users)
             return HttpResponse(f'Приветствуем {username}')
         elif username in users:
             i += 1
@@ -70,8 +60,7 @@ def sign_up_by_html(request):
         elif int(age) < 18:
             i += 1
             info[f'error {i}'] = HttpResponse('Вы должны быть старше 18', status=400, reason='insufficient age')
-            return HttpResponse('Вы должны быть старше 18',status=400, reason='insufficient age')
+            return HttpResponse('Вы должны быть старше 18', status=400, reason='insufficient age')
 
     context = {'info': info}
-
-    return render(request, 'registration_page_2.html.html', context)
+    return render(request, 'registration_page_2.html', context)
